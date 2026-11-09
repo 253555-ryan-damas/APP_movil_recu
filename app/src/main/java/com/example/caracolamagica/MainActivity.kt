@@ -4,11 +4,18 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.ui.tooling.preview.Preview
 
@@ -19,7 +26,13 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MaterialTheme {
-                PantallaPrincipal(viewModel)
+                // Superficie con un fondo azul marino suave para darle estética de "mar / fondo"
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = Color(0xFFE0F7FA)
+                ) {
+                    PantallaPrincipal(viewModel)
+                }
             }
         }
     }
@@ -35,47 +48,93 @@ fun PantallaPrincipal(viewModel: CaracolaViewModel) {
     var desesperacion by remember { mutableStateOf(5f) }
 
     Column(
-        modifier = Modifier.padding(20.dp).fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(20.dp),
+        verticalArrangement = Arrangement.spacedBy(14.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "La Caracola Mágica", style = MaterialTheme.typography.headlineLarge)
+
+        Spacer(modifier = Modifier.height(10.dp))
+        Text(
+            text = "La Caracola Mágica",
+            style = MaterialTheme.typography.headlineLarge,
+            fontWeight = FontWeight.Bold,
+            color = Color(0xFF006064)
+        )
 
         OutlinedTextField(
             value = nombre,
             onValueChange = { nombre = it },
             label = { Text("Tu Nombre") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(12.dp))
+                .background(Color.White),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedContainerColor = Color.White,
+                unfocusedContainerColor = Color.White
+            )
         )
 
         OutlinedTextField(
             value = pregunta,
             onValueChange = { pregunta = it },
             label = { Text("¿Qué deseas preguntar?") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(1.dp))
+                .background(Color.White),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedContainerColor = Color.White,
+                unfocusedContainerColor = Color.White
+            )
         )
 
-        Column(modifier = Modifier.fillMaxWidth()) {
-            Text(text = "ala izquierda preguntas no dificiles y la derecha preguntas dificiles: ${desesperacion.toInt()} / 10")
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(12.dp))
+                .background(Color.White)
+                .padding(14.dp)
+        ) {
             Text(
-                text = "(osea altera tu respuesta sin embargo sigue ciendo alaterio prura probablidad)",
+                text = "A la izquierda preguntas no difíciles y a la derecha preguntas difíciles: ${desesperacion.toInt()} / 10",
+                fontWeight = FontWeight.Medium,
+                color = Color.DarkGray,
+                fontSize = 14.sp
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = "(Osea altera tu respuesta sin embargo sigue siendo aleatorio por pura probabilidad)",
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = Color.Gray
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Slider(
+                value = desesperacion,
+                onValueChange = { desesperacion = it },
+                valueRange = 1f..10f
             )
         }
 
-        Slider(
-            value = desesperacion,
-            onValueChange = { desesperacion = it },
-            valueRange = 1f..10f
-        )
-
         Button(
             onClick = { viewModel.consultarCaracola(nombre, pregunta, desesperacion) },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp),
+            shape = RoundedCornerShape(12.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00838F))
         ) {
-            Text("Tirar de la cuerda")
+            Text(
+                text = "Tirar de la cuerda",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.White
+            )
         }
-
+        
         if (estado.mostrarResultado) {
             TarjetaResultado(
                 respuesta = estado.respuesta,
@@ -88,18 +147,30 @@ fun PantallaPrincipal(viewModel: CaracolaViewModel) {
 @Composable
 fun TarjetaResultado(respuesta: String, suerte: Int) {
     Card(
-        modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = "Veredicto de la Caracola:", style = MaterialTheme.typography.titleMedium)
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(text = respuesta, style = MaterialTheme.typography.bodyLarge)
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(text = "Probabilidad de éxito: $suerte%")
+            Text(
+                text = "Veredicto de la Caracola:",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF006064)
+            )
+            Spacer(modifier = Modifier.height(6.dp))
+            Text(text = respuesta, style = MaterialTheme.typography.bodyLarge, color = Color.Black)
+            Spacer(modifier = Modifier.height(10.dp))
+            Text(text = "Probabilidad de éxito: $suerte%", color = Color.Gray, fontSize = 14.sp)
+            Spacer(modifier = Modifier.height(6.dp))
             LinearProgressIndicator(
                 progress = suerte / 100f,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(8.dp)
+                    .clip(RoundedCornerShape(4.dp)),
+                color = Color(0xFF00ACC1)
             )
         }
     }
@@ -109,6 +180,8 @@ fun TarjetaResultado(respuesta: String, suerte: Int) {
 @Composable
 fun PantallaPrincipalPreview() {
     MaterialTheme {
-        PantallaPrincipal(viewModel = CaracolaViewModel())
+        Surface(modifier = Modifier.fillMaxSize(), color = Color(0xFFE0F7FA)) {
+            PantallaPrincipal(viewModel = CaracolaViewModel())
+        }
     }
 }
