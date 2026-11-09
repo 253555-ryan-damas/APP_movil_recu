@@ -10,8 +10,9 @@ class CaracolaViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(CaracolaState())
     val uiState: StateFlow<CaracolaState> = _uiState.asStateFlow()
 
-    private val respuestasPosibles = listOf("Sí", "Si tu quieres hazlo", "Prueba preguntando de nuevo con con mas nivel","la respuesta son los amigos que hicimos en el camino")
-    private val respuestasNegativas = listOf("No", "Si vas a preguntar eso no preguntes", "Pregúntale a tu compa mjr","hay veces donde tampoco se que responder")
+    private val respuestasPosibles = listOf("Sí","No","Si Dios quiere y si eres catol,si la naturaleza quiere", "Prueba preguntando de nuevo","yo digo que lo mates")
+
+    private val respuestasNegativas = listOf("No","Nose","si","Si vas a preguntar eso no preguntes", "Pregúntale al de al lado")
 
     fun consultarCaracola(nombre: String, pregunta: String, nivelDesesperacion: Float) {
         if (nombre.isNotBlank() && pregunta.isNotBlank()) {

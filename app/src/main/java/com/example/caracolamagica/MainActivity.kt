@@ -32,13 +32,13 @@ fun PantallaPrincipal(viewModel: CaracolaViewModel) {
 
     var nombre by remember { mutableStateOf("") }
     var pregunta by remember { mutableStateOf("") }
-    var energia by remember { mutableStateOf(5f) }
+    var desesperacion by remember { mutableStateOf(5f) }
 
     Column(
         modifier = Modifier.padding(20.dp).fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Text(text = "Caracola Mágica", style = MaterialTheme.typography.headlineLarge)
+        Text(text = "La Caracola Mágica", style = MaterialTheme.typography.headlineLarge)
 
         OutlinedTextField(
             value = nombre,
@@ -50,25 +50,31 @@ fun PantallaPrincipal(viewModel: CaracolaViewModel) {
         OutlinedTextField(
             value = pregunta,
             onValueChange = { pregunta = it },
-            label = { Text("Tu Pregunta") },
+            label = { Text("¿Qué deseas preguntar?") },
             modifier = Modifier.fillMaxWidth()
         )
 
-        Text(text = "Nivel de desesperacion: ${energia.toInt()}")
+        Column(modifier = Modifier.fillMaxWidth()) {
+            Text(text = "ala izquierda preguntas no dificiles y la derecha preguntas dificiles: ${desesperacion.toInt()} / 10")
+            Text(
+                text = "(osea altera tu respuesta sin embargo sigue ciendo alaterio prura probablidad)",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+
         Slider(
-            value = energia,
-            onValueChange = { energia = it },
+            value = desesperacion,
+            onValueChange = { desesperacion = it },
             valueRange = 1f..10f
         )
 
-
         Button(
-            onClick = { viewModel.consultarCaracola(nombre, pregunta, energia) },
+            onClick = { viewModel.consultarCaracola(nombre, pregunta, desesperacion) },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Ver Respuesta")
+            Text("Tirar de la cuerda")
         }
-
 
         if (estado.mostrarResultado) {
             TarjetaResultado(
@@ -86,7 +92,7 @@ fun TarjetaResultado(respuesta: String, suerte: Int) {
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = "Resultado:", style = MaterialTheme.typography.titleMedium)
+            Text(text = "Veredicto de la Caracola:", style = MaterialTheme.typography.titleMedium)
             Spacer(modifier = Modifier.height(8.dp))
             Text(text = respuesta, style = MaterialTheme.typography.bodyLarge)
             Spacer(modifier = Modifier.height(8.dp))
@@ -99,7 +105,6 @@ fun TarjetaResultado(respuesta: String, suerte: Int) {
     }
 }
 
-
 @Preview(showBackground = true)
 @Composable
 fun PantallaPrincipalPreview() {
@@ -107,4 +112,3 @@ fun PantallaPrincipalPreview() {
         PantallaPrincipal(viewModel = CaracolaViewModel())
     }
 }
-
